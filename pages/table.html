@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="row">
+        <div ng-controller="tableController as vm">
+            <fieldset style="padding:15px 15px;border:1;">
+                <legend>Setting for Auto-Refreshing:</legend>
+                <cc-auto-refresh-fn
+                    refresh-fn="vm.refreshList()"
+                    refresh-interval="vm.refreshOpts.interval"
+                    refresh-model="vm.list"
+                    refresh-paused="vm.refreshOpts.paused"
+                    refresh-busy="vm.refreshBusy"
+                    refresh-on-refreshed="vm.setLastRefreshed(eventArgs)">
+                </cc-auto-refresh-fn>
+                <div class="form-group">
+                    <label class="control-label" for="inputInterval">Interval:</label>
+                    <input type="number" class="form-control input-sm" id="inputInterval" placeholder="Seconds"
+                        ng-model="vm.refreshOpts.interval">
+                    <p class="help-block">Interval in milliseconds</p>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" ng-disabled="vm.refreshBusy">
+                        <input type="checkbox" ng-model="vm.refreshOpts.paused" ng-disabled="vm.refreshBusy"> Paused?
+                    </label>
+                </div>
+            </fieldset>
+            <h1 align=center>Information</h1><br>
+            <div class="col-md-12 col-lg-12" ultimate-datatable="datatable">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<style>
+    table, th , td {
+      border: 1px solid grey;
+      border-collapse: collapse;
+      padding: 5px;
+    }
+    tr:nth-child(odd) {
+      background-color: #f1f1f1;
+    }
+    tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+    </style>
+
+
+<div ng-controller="jsonParseCtrl" style="padding-bottom:50px;">
+    <table style="margin: 50px 50px;">
+        <thead>
+            <tr>
+                <th  ng-repeat="key in keys">{{ key }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td  ng-repeat="value in currentValues">{{ value.objectValue }}</td>
+            </tr>   
+        </tbody>
+    </table>
+</div>

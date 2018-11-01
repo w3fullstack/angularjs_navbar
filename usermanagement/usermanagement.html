@@ -1,0 +1,139 @@
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>User Management Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+</head>
+<body ng-app="usermanagementApplication" ng-controller="usermanagementConroller" ng-cloak>
+
+<div class="container">
+    <hr>
+    <div class="row">
+    <h2 style="text-align: center; font-family: Georgia;">User Management</h2>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div grid-data id='test' grid-options="gridOptions" grid-actions="gridActions">
+                <div class="row">
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th sortable="code" class="sortable">
+                           User Name
+                        </th>
+                        <th sortable="placed" class="sortable">
+                            Full Name
+                        </th>
+                        <th sortable="placed" class="sortable">
+                            Email
+                        </th>
+                         <th sortable="code" class="sortable">
+                            Phone Number
+                        </th>
+                     
+                        <th class="st-sort-disable th-dropdown">
+                            <select class="form-control width-15"
+                                    filter-by="statusDisplay"
+                                    filter-type="select"
+                                    ng-model="status"
+                                    ng-change="filter()">
+                                <option value="">All Statuses</option>
+                                <option ng-repeat="option in statusOptions track by option.value"
+                                        value="{{option.value}}">{{option.text}}
+                                </option>
+                            </select>
+                        </th>
+                        <th sortable='total.value' class="sortable">
+                           Email
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr grid-item>
+                        <td width="30%" ng-bind="item.code"></td>
+                        <td width="30%" ng-bind="item.code"></td>
+                        <td width="30%" ng-bind="item.code"></td>
+                        <td width="30%" ng-bind="item.placed | date:'MM/dd/yyyy'"></td>
+                        <td ng-bind="item.statusDisplay"></td>
+                        <td ng-bind="item.total.formattedValue"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <form class="form-inline pull-right margin-bottom-basic">
+                    <div class="form-group">
+                        <grid-pagination max-size="5"
+                                         boundary-links="true"
+                                         class="pagination-sm"
+                                         total-items="paginationOptions.totalItems"
+                                         ng-model="paginationOptions.currentPage"
+                                         ng-change="reloadGrid()"
+                                         items-per-page="paginationOptions.itemsPerPage"></grid-pagination>
+                    </div>
+                    <div class="form-group items-per-page">
+                        <label for="itemsOnPageSelect2">Items per page:</label>
+                        <select id="itemsOnPageSelect2" class="form-control input-sm"
+                                ng-init="paginationOptions.itemsPerPage = '10'"
+                                ng-model="paginationOptions.itemsPerPage" ng-change="reloadGrid()">
+                            <option>10</option>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>75</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <button type="button" class="btn btn-info">Primary</button>
+    <hr>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+<script src="https://angular-data-grid.github.io/dist/pagination.js"></script>
+<script src="https://angular-data-grid.github.io/dist/JSONToCSVConvertor.js"></script>
+<script src="https://angular-data-grid.github.io/dist/dataGrid.js"></script>
+<script>
+angular.module('usermanagementApplication', ['ui.bootstrap', 'dataGrid', 'pagination'])
+.controller('usermanagementConroller', ['$scope', 'usermanagementFactory', '$filter', function ($scope, usermanagementFactory, $filter) {
+    
+	$scope.gridOptions = {
+        data: [],
+        urlSync: true
+    };
+    usermanagementFactory.getData().then(function (responseData) {
+        $scope.gridOptions.data = responseData.data;
+    });
+}])
+.factory('usermanagementFactory', function ($http) {
+    return {
+        getData: function () {
+            return $http({
+                method: 'GET',
+                url: 'data.json'
+            });
+        }
+    }
+});
+
+//Function to replicate setInterval using $timeout service.
+$scope.intervalFunction = function(){
+  $timeout(function() {
+	$scope.gridOptions();
+    $scope.intervalFunction();
+  }, 5000)
+};
+// Kick off the interval
+$scope.intervalFunction();
+
+</script>
+</html>
